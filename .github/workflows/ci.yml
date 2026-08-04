@@ -15,6 +15,7 @@ jobs:
     name: Test Suite
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         rust: [stable, nightly]
@@ -71,17 +72,21 @@ jobs:
     - uses: dtolnay/rust-toolchain@stable
     - uses: Swatinem/rust-cache@v2
     - uses: taiki-e/install-action@cargo-tarpaulin
-    - run: cargo tarpaulin --workspace --out Xml
-    - uses: codecov/codecov-action@v3
+    - name: Generate coverage
+      run: cargo tarpaulin --workspace --out xml --output-dir .
+    - uses: codecov/codecov-action@v5
       with:
         files: ./cobertura.xml
+        fail_ci_if_error: false
+        token: ${{ secrets.CODECOV_TOKEN }}
 
   security:
     name: Security Audit
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: rustsec/audit-check-action@v1
+    - uses: dtolnay/rust-toolchain@stable
+    - uses: rustsec/audit-check@v2.0.0
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -89,17 +94,17 @@ jobs:
     name: Build
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
           - os: windows-latest
             target: x86_64-pc-windows-msvc
           - os: macos-latest
-            target: x86_64-apple-darwin
-          - os: macos-latest
             target: aarch64-apple-darwin
+          - os: macos-latest
+            target: x86_64-apple-darwin
 
     steps:
     - uses: actions/checkout@v4

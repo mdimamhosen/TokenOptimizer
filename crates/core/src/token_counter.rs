@@ -1,6 +1,5 @@
 /// Token counter for different AI providers
 /// Uses statistical estimation for models without known tokenizers
-
 pub struct TokenCounter;
 
 impl TokenCounter {
@@ -26,8 +25,9 @@ impl TokenCounter {
             _ => (0.003, 0.015),
         };
 
-        ((prompt_tokens as f64 * prompt_cost_per_mtok) +
-         (completion_tokens as f64 * completion_cost_per_mtok)) / 1_000_000.0
+        ((prompt_tokens as f64 * prompt_cost_per_mtok)
+            + (completion_tokens as f64 * completion_cost_per_mtok))
+            / 1_000_000.0
     }
 
     /// Estimate cost for GPT models (USD)
@@ -39,12 +39,18 @@ impl TokenCounter {
             _ => (0.01, 0.03),
         };
 
-        ((prompt_tokens as f64 * prompt_cost_per_1k) +
-         (completion_tokens as f64 * completion_cost_per_1k)) / 1_000.0
+        ((prompt_tokens as f64 * prompt_cost_per_1k)
+            + (completion_tokens as f64 * completion_cost_per_1k))
+            / 1_000.0
     }
 
     /// Estimate cost for any model
-    pub fn estimate_cost(prompt_tokens: i64, completion_tokens: i64, provider: &str, model: &str) -> f64 {
+    pub fn estimate_cost(
+        prompt_tokens: i64,
+        completion_tokens: i64,
+        provider: &str,
+        model: &str,
+    ) -> f64 {
         match provider {
             "anthropic" => Self::estimate_claude_cost(prompt_tokens, completion_tokens, model),
             "openai" => Self::estimate_gpt_cost(prompt_tokens, completion_tokens, model),

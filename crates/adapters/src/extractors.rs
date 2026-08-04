@@ -1,4 +1,4 @@
-/// Data extractors for different AI tools
+//! Data extractors for different AI tools
 use std::path::Path;
 
 pub struct DataExtractor;

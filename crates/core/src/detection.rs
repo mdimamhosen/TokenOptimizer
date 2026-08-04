@@ -73,7 +73,11 @@ impl ToolDetector {
         {
             let app_data = self.home_dir.join(".claude");
             if app_data.exists() {
-                return Ok((Some(app_data.to_string_lossy().into_owned()), None, Some(app_data.to_string_lossy().into_owned())));
+                return Ok((
+                    Some(app_data.to_string_lossy().into_owned()),
+                    None,
+                    Some(app_data.to_string_lossy().into_owned()),
+                ));
             }
         }
 
@@ -81,7 +85,11 @@ impl ToolDetector {
         {
             let app_dir = self.home_dir.join(".claude");
             if app_dir.exists() {
-                return Ok((Some(app_dir.to_string_lossy().into_owned()), None, Some(app_dir.to_string_lossy().into_owned())));
+                return Ok((
+                    Some(app_dir.to_string_lossy().into_owned()),
+                    None,
+                    Some(app_dir.to_string_lossy().into_owned()),
+                ));
             }
         }
 
@@ -117,7 +125,9 @@ impl ToolDetector {
         Ok((None, None, None))
     }
 
-    async fn detect_github_copilot(&self) -> Result<(Option<String>, Option<String>, Option<String>)> {
+    async fn detect_github_copilot(
+        &self,
+    ) -> Result<(Option<String>, Option<String>, Option<String>)> {
         #[cfg(target_os = "windows")]
         {
             let copilot_dir = self.home_dir.join("AppData/Local/GitHub Copilot");
@@ -142,7 +152,11 @@ impl ToolDetector {
         {
             let windsurf_dir = self.home_dir.join("AppData/Local/windsurf");
             if windsurf_dir.exists() {
-                return Ok((Some(windsurf_dir.to_string_lossy().into_owned()), None, None));
+                return Ok((
+                    Some(windsurf_dir.to_string_lossy().into_owned()),
+                    None,
+                    None,
+                ));
             }
         }
 
@@ -150,7 +164,11 @@ impl ToolDetector {
         {
             let windsurf_dir = self.home_dir.join(".windsurf");
             if windsurf_dir.exists() {
-                return Ok((Some(windsurf_dir.to_string_lossy().into_owned()), None, None));
+                return Ok((
+                    Some(windsurf_dir.to_string_lossy().into_owned()),
+                    None,
+                    None,
+                ));
             }
         }
 
@@ -193,7 +211,9 @@ impl ToolDetector {
         Ok((None, None, None))
     }
 
-    async fn detect_openai_codex(&self) -> Result<(Option<String>, Option<String>, Option<String>)> {
+    async fn detect_openai_codex(
+        &self,
+    ) -> Result<(Option<String>, Option<String>, Option<String>)> {
         let codex_dir = self.home_dir.join(".openai");
         if codex_dir.exists() {
             return Ok((

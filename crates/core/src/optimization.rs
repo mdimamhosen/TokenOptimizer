@@ -56,11 +56,11 @@ impl OptimizationEngine {
             recommendations.push(Recommendation {
                 id: uuid::Uuid::new_v4().to_string(),
                 category: "large_directories".to_string(),
-                issue: format!("Found large directories that shouldn't be indexed: {}", dirs),
-                suggestion: format!(
-                    "Exclude these directories from AI tool context: {}",
+                issue: format!(
+                    "Found large directories that shouldn't be indexed: {}",
                     dirs
                 ),
+                suggestion: format!("Exclude these directories from AI tool context: {}", dirs),
                 estimated_savings: 40.0,
                 priority: "high".to_string(),
             });
@@ -123,8 +123,9 @@ impl OptimizationEngine {
                             id: uuid::Uuid::new_v4().to_string(),
                             category: "outdated_docs".to_string(),
                             issue: "Documentation contains TODO/FIXME markers".to_string(),
-                            suggestion: "Keep documentation up-to-date. Remove or resolve TODO markers."
-                                .to_string(),
+                            suggestion:
+                                "Keep documentation up-to-date. Remove or resolve TODO markers."
+                                    .to_string(),
                             estimated_savings: 15.0,
                             priority: "low".to_string(),
                         });
@@ -151,7 +152,7 @@ impl OptimizationEngine {
             };
         }
 
-        score.max(0).min(100)
+        score.clamp(0, 100)
     }
 }
 
@@ -164,6 +165,6 @@ mod tests {
     fn test_readiness_score() {
         let temp_dir = TempDir::new().unwrap();
         let score = OptimizationEngine::calculate_readiness_score(temp_dir.path());
-        assert!(score >= 0 && score <= 100);
+        assert!((0..=100).contains(&score));
     }
 }

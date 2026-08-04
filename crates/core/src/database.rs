@@ -137,7 +137,7 @@ impl Database {
         .bind(&tool.path)
         .bind(&tool.version)
         .bind(&tool.config_path)
-        .bind(&tool.last_detected)
+        .bind(tool.last_detected)
         .execute(&self.pool)
         .await?;
 
@@ -262,7 +262,7 @@ impl Database {
 
     pub async fn get_total_tokens_by_tool(&self, tool: &str) -> Result<i64> {
         let result = sqlx::query_scalar::<_, i64>(
-            "SELECT COALESCE(SUM(total_tokens), 0) FROM token_usage WHERE tool = ?"
+            "SELECT COALESCE(SUM(total_tokens), 0) FROM token_usage WHERE tool = ?",
         )
         .bind(tool)
         .fetch_one(&self.pool)
@@ -272,18 +272,17 @@ impl Database {
     }
 
     pub async fn get_total_tokens(&self) -> Result<i64> {
-        let result = sqlx::query_scalar::<_, i64>(
-            "SELECT COALESCE(SUM(total_tokens), 0) FROM token_usage"
-        )
-        .fetch_one(&self.pool)
-        .await?;
+        let result =
+            sqlx::query_scalar::<_, i64>("SELECT COALESCE(SUM(total_tokens), 0) FROM token_usage")
+                .fetch_one(&self.pool)
+                .await?;
 
         Ok(result)
     }
 
     pub async fn get_token_usage_by_tool(&self) -> Result<Vec<(String, i64)>> {
         let results = sqlx::query(
-            "SELECT tool, COALESCE(SUM(total_tokens), 0) as total FROM token_usage GROUP BY tool"
+            "SELECT tool, COALESCE(SUM(total_tokens), 0) as total FROM token_usage GROUP BY tool",
         )
         .fetch_all(&self.pool)
         .await?;
@@ -311,14 +310,17 @@ impl Database {
         .bind(analysis.ai_readiness_score)
         .bind(analysis.total_tokens)
         .bind(analysis.session_count)
-        .bind(&analysis.last_analyzed)
+        .bind(analysis.last_analyzed)
         .execute(&self.pool)
         .await?;
 
         Ok(())
     }
 
-    pub async fn get_project_analysis(&self, project_path: &str) -> Result<Option<ProjectAnalysis>> {
+    pub async fn get_project_analysis(
+        &self,
+        project_path: &str,
+    ) -> Result<Option<ProjectAnalysis>> {
         let analysis = sqlx::query_as::<_, ProjectAnalysis>(
             "SELECT id, project_path, ai_readiness_score, total_tokens, session_count, last_analyzed FROM project_analysis WHERE project_path = ?"
         )
@@ -335,13 +337,12 @@ impl Database {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_os = "windows")))]
 mod tests {
     use super::*;
     use tempfile::TempDir;
 
     #[tokio::test]
-    #[cfg(not(target_os = "windows"))]
     async fn test_database_creation() {
         let temp_dir = TempDir::new().unwrap();
         let db_path = temp_dir.path().join("test.db");

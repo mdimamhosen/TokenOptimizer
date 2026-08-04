@@ -30,7 +30,8 @@ pub struct Config {
 impl Config {
     /// Create new config with default paths
     pub fn new() -> Result<Self> {
-        let home = dirs::home_dir().ok_or(Error::ConfigError("Cannot determine home directory".into()))?;
+        let home =
+            dirs::home_dir().ok_or(Error::ConfigError("Cannot determine home directory".into()))?;
         let data_dir = home.join(".ai-assist");
         let db_path = data_dir.join("ai_assist.db");
 

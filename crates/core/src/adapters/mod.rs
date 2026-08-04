@@ -1,6 +1,5 @@
 /// Adapters for different AI tools
 /// Each adapter implements unified interface for tool-specific data
-
 pub mod claude;
 pub mod cursor;
 

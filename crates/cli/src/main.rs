@@ -1,7 +1,7 @@
-use ai_assist_core::{detection::ToolDetector, database::Database, Config};
+use ai_assist_core::{database::Database, detection::ToolDetector, Config};
 use clap::{Parser, Subcommand};
 use colored::*;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use tracing_subscriber::EnvFilter;
 
 #[derive(Parser)]
@@ -93,7 +93,10 @@ async fn cmd_init(config: &Config) -> anyhow::Result<()> {
     let detector = ToolDetector::new(config.home.clone());
     let tools = detector.detect_all().await?;
 
-    println!("\n{} AI Tools Detected:\n", tools.len().to_string().green().bold());
+    println!(
+        "\n{} AI Tools Detected:\n",
+        tools.len().to_string().green().bold()
+    );
 
     for tool in &tools {
         let status = if tool.installed {
@@ -135,7 +138,11 @@ async fn cmd_scan(config: &Config) -> anyhow::Result<()> {
 
         db.save_detected_tool(&tool).await?;
 
-        let status = if result.installed { "✓".green() } else { "✗".red() };
+        let status = if result.installed {
+            "✓".green()
+        } else {
+            "✗".red()
+        };
         println!("  {} {}", status, result.tool.display_name().bold());
     }
 
@@ -162,7 +169,11 @@ async fn cmd_usage(
 
     let by_tool = db.get_token_usage_by_tool().await?;
     for (tool_name, tokens) in by_tool {
-        println!("  {} {}", tool_name.bold(), format!("{} tokens", tokens).green());
+        println!(
+            "  {} {}",
+            tool_name.bold(),
+            format!("{} tokens", tokens).green()
+        );
     }
 
     db.close().await?;
@@ -175,7 +186,7 @@ async fn cmd_dashboard(_config: &Config) -> anyhow::Result<()> {
     Ok(())
 }
 
-async fn cmd_analyze(_config: &Config, path: &PathBuf) -> anyhow::Result<()> {
+async fn cmd_analyze(_config: &Config, path: &Path) -> anyhow::Result<()> {
     println!(
         "{} {}",
         "Analyzing project:".cyan(),
@@ -187,7 +198,11 @@ async fn cmd_analyze(_config: &Config, path: &PathBuf) -> anyhow::Result<()> {
     let score = OptimizationEngine::calculate_readiness_score(path);
     let recommendations = OptimizationEngine::analyze_project(path);
 
-    println!("\n{} {}/100", "AI Readiness Score:".bold(), score.to_string().green().bold());
+    println!(
+        "\n{} {}/100",
+        "AI Readiness Score:".bold(),
+        score.to_string().green().bold()
+    );
 
     if !recommendations.is_empty() {
         println!("\n{} Recommendations:\n", "Found".yellow().bold());
@@ -201,7 +216,10 @@ async fn cmd_analyze(_config: &Config, path: &PathBuf) -> anyhow::Result<()> {
 
             println!("{}. {} [{}]", i + 1, rec.issue.bold(), priority_color);
             println!("   Suggestion: {}", rec.suggestion.bright_black());
-            println!("   Potential savings: {}%\n", rec.estimated_savings.to_string().green());
+            println!(
+                "   Potential savings: {}%\n",
+                rec.estimated_savings.to_string().green()
+            );
         }
     } else {
         println!("\n{}", "No issues found!".green().bold());
