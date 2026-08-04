@@ -1,0 +1,12 @@
+[package]
+name = "ai-assist-desktop"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+ai-assist-core = { path = "../core" }
+tokio = { workspace = true }
+
+[lib]

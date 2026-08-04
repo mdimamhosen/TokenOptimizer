@@ -1,0 +1,16 @@
+[package]
+name = "ai-assist-adapters"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+ai-assist-core = { path = "../core" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+walkdir = { workspace = true }
+anyhow = { workspace = true }
+
+[lib]

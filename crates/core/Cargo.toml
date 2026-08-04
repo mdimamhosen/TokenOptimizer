@@ -1,0 +1,28 @@
+[package]
+name = "ai-assist-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+sqlx = { workspace = true }
+chrono = { workspace = true }
+tracing = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+regex = { workspace = true }
+tempfile = { workspace = true }
+uuid = { workspace = true }
+lazy_static = { workspace = true }
+dirs = { workspace = true }
+walkdir = { workspace = true }
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.56", features = ["Win32_Foundation", "Win32_System_Registry"] }
+
+[dev-dependencies]
+tokio-test = "0.4"
